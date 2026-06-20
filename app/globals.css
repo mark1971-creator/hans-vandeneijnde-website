@@ -1,0 +1,205 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --ivory: #faf7f2;
+  --stone: #e8e0d4;
+  --sand: #d4c4b0;
+  --terracotta: #9c6644;
+  --terracotta-deep: #7a4f32;
+  --sage: #6b705c;
+  --charcoal: #2c2416;
+  --charcoal-light: #3d3428;
+  --gold: #c4a574;
+  --background: var(--ivory);
+  --foreground: var(--charcoal);
+  --muted: #6b6358;
+  --accent: var(--terracotta);
+  --border: color-mix(in srgb, var(--stone) 80%, var(--charcoal) 20%);
+}
+
+.dark {
+  --background: #1a1612;
+  --foreground: #f5f0e8;
+  --muted: #a89f92;
+  --accent: var(--gold);
+  --border: color-mix(in srgb, var(--charcoal-light) 70%, var(--gold) 30%);
+}
+
+@theme inline {
+  --color-ivory: var(--ivory);
+  --color-stone: var(--stone);
+  --color-sand: var(--sand);
+  --color-terracotta: var(--terracotta);
+  --color-terracotta-deep: var(--terracotta-deep);
+  --color-sage: var(--sage);
+  --color-charcoal: var(--charcoal);
+  --color-charcoal-light: var(--charcoal-light);
+  --color-gold: var(--gold);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --font-display: var(--font-cormorant);
+  --font-sans: var(--font-source-sans);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-source-sans), system-ui, sans-serif;
+    font-feature-settings: "kern" 1, "liga" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    line-height: 1.15;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 5vw, 3.75rem);
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  }
+
+  h3 {
+    font-size: clamp(1.35rem, 2.5vw, 1.875rem);
+  }
+
+  p {
+    line-height: 1.75;
+  }
+
+  a {
+    text-underline-offset: 0.2em;
+  }
+
+  ::selection {
+    background-color: color-mix(in srgb, var(--terracotta) 35%, transparent);
+    color: var(--foreground);
+  }
+
+  .dark ::selection {
+    background-color: color-mix(in srgb, var(--gold) 35%, transparent);
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 py-16 sm:px-6 sm:py-20 lg:px-8 lg:py-24;
+  }
+
+  .container-narrow {
+    @apply mx-auto max-w-3xl;
+  }
+
+  .container-wide {
+    @apply mx-auto max-w-7xl;
+  }
+
+  .prose-artist {
+    @apply text-base leading-relaxed text-muted sm:text-lg;
+  }
+
+  .heading-display {
+    @apply font-display font-medium tracking-wide text-charcoal dark:text-ivory;
+  }
+
+  .link-accent {
+    @apply text-terracotta underline decoration-terracotta/30 underline-offset-4 transition-colors hover:decoration-terracotta dark:text-gold dark:decoration-gold/30 dark:hover:decoration-gold;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full border border-terracotta bg-terracotta px-6 py-2.5 text-sm font-medium tracking-wide text-ivory transition-all hover:bg-terracotta-deep hover:border-terracotta-deep dark:border-gold dark:bg-gold dark:text-charcoal dark:hover:bg-sand dark:hover:border-sand;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-full border border-stone/80 bg-transparent px-6 py-2.5 text-sm font-medium tracking-wide text-charcoal transition-all hover:border-terracotta hover:text-terracotta dark:border-charcoal-light/60 dark:text-ivory dark:hover:border-gold dark:hover:text-gold;
+  }
+
+  /* Gallery grid — masonry-friendly responsive layout */
+  .gallery-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6;
+  }
+
+  .gallery-grid-wide {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-6;
+  }
+
+  .gallery-item {
+    @apply relative overflow-hidden rounded-sm bg-stone/30 dark:bg-charcoal-light/40;
+  }
+
+  .gallery-item img,
+  .gallery-item .gallery-image {
+    @apply block h-auto w-full object-cover transition-transform duration-500 ease-out;
+  }
+
+  .gallery-item:hover img,
+  .gallery-item:hover .gallery-image {
+    transform: scale(1.02);
+  }
+
+  .gallery-caption {
+    @apply mt-3 font-display text-lg tracking-wide text-charcoal dark:text-ivory;
+  }
+
+  .gallery-meta {
+    @apply mt-1 text-sm text-muted;
+  }
+
+  .gallery-overlay {
+    @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/50 via-transparent to-transparent opacity-0 transition-opacity duration-300;
+  }
+
+  .gallery-item:hover .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-overlay-text {
+    @apply absolute bottom-0 left-0 right-0 translate-y-2 p-4 font-display text-ivory opacity-0 transition-all duration-300;
+  }
+
+  .gallery-item:hover .gallery-overlay-text {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .divider {
+    @apply mx-auto h-px w-16 bg-terracotta/40 dark:bg-gold/40;
+  }
+
+  .page-header {
+    @apply px-4 py-16 pb-8 text-center sm:px-6 sm:py-20 sm:pb-12 lg:px-8 lg:py-24;
+  }
+
+  .page-header p {
+    @apply mx-auto mt-4 max-w-2xl text-base leading-relaxed text-muted sm:text-lg;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-cormorant), Georgia, "Times New Roman", serif;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
