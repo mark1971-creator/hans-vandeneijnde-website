@@ -41,6 +41,23 @@ function walkImages(dir, files = []) {
   return files;
 }
 
+function walkOptimized(dir, files = []) {
+  if (!fs.existsSync(dir)) {
+    return files;
+  }
+
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkOptimized(fullPath, files);
+    } else if (entry.name.endsWith(".webp")) {
+      files.push(fullPath);
+    }
+  }
+
+  return files;
+}
+
 function toPublicSrc(filePath) {
   const relative = path.relative(path.join(ROOT, "public"), filePath);
   return `/${relative.split(path.sep).join("/")}`;
@@ -122,6 +139,25 @@ function writeManifest(manifest) {
   fs.writeFileSync(MANIFEST_PATH, lines.join("\n"), "utf8");
 }
 
+function pruneOrphans(sources) {
+  const expected = new Set();
+  for (const sourcePath of sources) {
+    for (const width of WIDTHS) {
+      expected.add(path.resolve(variantPath(sourcePath, width)));
+    }
+  }
+
+  let removed = 0;
+  for (const filePath of walkOptimized(OUTPUT_DIR)) {
+    if (!expected.has(path.resolve(filePath))) {
+      fs.unlinkSync(filePath);
+      removed += 1;
+    }
+  }
+
+  return removed;
+}
+
 async function main() {
   const sources = walkImages(IMAGES_DIR);
   const manifest = {};
@@ -162,9 +198,16 @@ async function main() {
     };
   }
 
+  const removed = pruneOrphans(sources);
   writeManifest(manifest);
+
+  const manifestCount = Object.keys(manifest).length;
+  if (sources.length > 0 && manifestCount === 0) {
+    throw new Error("Image manifest is empty despite source images in public/images/");
+  }
+
   console.log(
-    `Optimized ${sources.length} images (${created} variants written, ${cached} cached) → public/images-optimized/`,
+    `Optimized ${sources.length} images → ${manifestCount} entries (${created} variants written, ${cached} cached, ${removed} orphans removed)`,
   );
 }
 

@@ -1,22 +1,51 @@
 /**
  * Verifies the static export exists after build.
- * Called automatically via npm postbuild (also run from build-static.mjs).
+ * Called automatically via npm postbuild.
  */
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const outDir = path.join(root, "out");
 const indexHtml = path.join(outDir, "index.html");
 
 const REQUIRED_METADATA = [
+  "favicon.svg",
   "icon.png",
   "apple-icon.png",
   "favicon.ico",
   "opengraph-image.png",
   "twitter-image.png",
 ];
+
+function countWebpFiles(dir) {
+  if (!fs.existsSync(dir)) {
+    return 0;
+  }
+
+  let count = 0;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      count += countWebpFiles(fullPath);
+    } else if (entry.name.endsWith(".webp")) {
+      count += 1;
+    }
+  }
+  return count;
+}
+
+function isValidIco(filePath) {
+  const buffer = fs.readFileSync(filePath);
+  return (
+    buffer.length > 22 &&
+    buffer[0] === 0 &&
+    buffer[1] === 0 &&
+    buffer[2] === 1 &&
+    buffer[3] === 0
+  );
+}
 
 if (!fs.existsSync(indexHtml)) {
   console.error(
@@ -33,15 +62,27 @@ for (const file of REQUIRED_METADATA) {
   }
 }
 
-const optimizedDir = path.join(outDir, "images-optimized");
-if (!fs.existsSync(optimizedDir)) {
-  console.error("postbuild: missing out/images-optimized/ — run npm run optimize-images.");
+const faviconPath = path.join(outDir, "favicon.ico");
+if (!isValidIco(faviconPath)) {
+  console.error("postbuild: favicon.ico is not a valid ICO file.");
   process.exit(1);
 }
 
-// serve.json is written by build-static.mjs; keep a fallback for manual builds.
+const optimizedDir = path.join(outDir, "images-optimized");
+const webpCount = countWebpFiles(optimizedDir);
+if (webpCount === 0) {
+  console.error(
+    "postbuild: out/images-optimized/ has no WebP files — run npm run optimize-images.",
+  );
+  process.exit(1);
+}
+
 const serveDest = path.join(outDir, "serve.json");
 if (!fs.existsSync(serveDest)) {
   fs.copyFileSync(path.join(root, "deploy", "serve.json"), serveDest);
   console.log("postbuild: wrote out/serve.json");
 }
+
+console.log(
+  `postbuild: verified static export (${webpCount} optimized WebP files in out/images-optimized/)`,
+);

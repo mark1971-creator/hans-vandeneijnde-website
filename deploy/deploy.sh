@@ -17,12 +17,17 @@ export NODE_ENV=production
 npm ci
 npm run build
 
-for f in icon.png apple-icon.png favicon.ico opengraph-image.png twitter-image.png; do
+for f in favicon.svg icon.png apple-icon.png favicon.ico opengraph-image.png twitter-image.png; do
   if [ ! -f "$REPO_DIR/out/$f" ]; then
     echo "ERROR: out/$f missing after build" >&2
     exit 1
   fi
 done
+
+if [ -z "$(find "$REPO_DIR/out/images-optimized" -name '*.webp' -print -quit)" ]; then
+  echo "ERROR: out/images-optimized/ has no WebP files" >&2
+  exit 1
+fi
 
 echo "==> Publishing static export to $APP_DIR/out"
 mkdir -p "$APP_DIR"

@@ -16,15 +16,37 @@ const HERO_IMAGE = path.join(
   "public/images/paintings/jerez-de-la-frontera.png",
 );
 
-async function writeIcon() {
-  const svg = `
-    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-      <rect width="32" height="32" fill="#2c2416"/>
-      <text x="16" y="22" text-anchor="middle" fill="#faf7f2" font-family="Georgia, serif" font-size="20" font-weight="500">H</text>
-    </svg>
-  `;
+const FAVICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#2c2416"/>
+  <text x="16" y="22" text-anchor="middle" fill="#faf7f2" font-family="Georgia, serif" font-size="20" font-weight="500">H</text>
+</svg>`;
 
-  await sharp(Buffer.from(svg)).png().toFile(path.join(PUBLIC_DIR, "icon.png"));
+/** Write a valid ICO file containing a single embedded PNG (Windows Vista+). */
+function writeIcoFromPng(pngBuffer, outputPath) {
+  const header = Buffer.alloc(6);
+  header.writeUInt16LE(0, 0);
+  header.writeUInt16LE(1, 2);
+  header.writeUInt16LE(1, 4);
+
+  const entry = Buffer.alloc(16);
+  entry.writeUInt8(32, 0);
+  entry.writeUInt8(32, 1);
+  entry.writeUInt8(0, 2);
+  entry.writeUInt8(0, 3);
+  entry.writeUInt16LE(1, 4);
+  entry.writeUInt16LE(32, 6);
+  entry.writeUInt32LE(pngBuffer.length, 8);
+  entry.writeUInt32LE(22, 12);
+
+  fs.writeFileSync(outputPath, Buffer.concat([header, entry, pngBuffer]));
+}
+
+async function writeFaviconSvg() {
+  fs.writeFileSync(path.join(PUBLIC_DIR, "favicon.svg"), FAVICON_SVG, "utf8");
+}
+
+async function writeIcon() {
+  await sharp(Buffer.from(FAVICON_SVG)).png().toFile(path.join(PUBLIC_DIR, "icon.png"));
 }
 
 async function writeAppleIcon() {
@@ -47,8 +69,12 @@ async function writeAppleIcon() {
 }
 
 async function writeFavicon() {
-  const iconPath = path.join(PUBLIC_DIR, "icon.png");
-  fs.copyFileSync(iconPath, path.join(PUBLIC_DIR, "favicon.ico"));
+  const pngBuffer = await sharp(Buffer.from(FAVICON_SVG))
+    .resize(32, 32)
+    .png()
+    .toBuffer();
+
+  writeIcoFromPng(pngBuffer, path.join(PUBLIC_DIR, "favicon.ico"));
 }
 
 async function writeOpenGraphImage() {
@@ -85,6 +111,7 @@ async function writeOpenGraphImage() {
 }
 
 async function main() {
+  await writeFaviconSvg();
   await writeIcon();
   await writeAppleIcon();
   await writeFavicon();
@@ -94,7 +121,7 @@ async function main() {
     path.join(PUBLIC_DIR, "twitter-image.png"),
   );
   console.log(
-    "Generated public/icon.png, apple-icon.png, favicon.ico, opengraph-image.png, twitter-image.png",
+    "Generated public/favicon.svg, icon.png, apple-icon.png, favicon.ico, opengraph-image.png, twitter-image.png",
   );
 }
 

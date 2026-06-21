@@ -21,6 +21,7 @@ const REQUIRED_PATHS = [
   "_next/static",
   "images",
   "images-optimized",
+  "favicon.svg",
   "icon.png",
   "apple-icon.png",
   "favicon.ico",
@@ -75,6 +76,37 @@ function verifyExport(outDir) {
       fail(`Missing required export path: out/${relativePath}`);
     }
   }
+
+  const faviconPath = path.join(outDir, "favicon.ico");
+  const favicon = fs.readFileSync(faviconPath);
+  if (
+    favicon.length <= 22 ||
+    favicon[0] !== 0 ||
+    favicon[1] !== 0 ||
+    favicon[2] !== 1 ||
+    favicon[3] !== 0
+  ) {
+    fail("favicon.ico in out/ is not a valid ICO file");
+  }
+
+  let webpCount = 0;
+  function countWebp(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        countWebp(fullPath);
+      } else if (entry.name.endsWith(".webp")) {
+        webpCount += 1;
+      }
+    }
+  }
+  countWebp(path.join(outDir, "images-optimized"));
+
+  if (webpCount === 0) {
+    fail("out/images-optimized/ contains no WebP files");
+  }
+
+  log(`Verified ${webpCount} optimized WebP files in out/images-optimized/`);
 }
 
 function copyServeConfig(outDir) {
