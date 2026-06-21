@@ -8,7 +8,9 @@
     "prebuild": "npm run sync-artworks",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "postbuild": "node scripts/postbuild.mjs",
+    "preview": "serve out -l 3000",
+    "start": "serve out -l 3000",
     "lint": "eslint"
   },
   "dependencies": {
@@ -26,6 +28,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
+    "serve": "^14.2.4",
     "sharp": "^0.35.2",
     "tailwindcss": "^4",
     "typescript": "^5"
