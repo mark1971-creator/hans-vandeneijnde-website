@@ -20,6 +20,7 @@ const REQUIRED_PATHS = [
   "404.html",
   "_next/static",
   "images",
+  "images-optimized",
   "icon.png",
   "apple-icon.png",
   "favicon.ico",

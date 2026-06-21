@@ -33,6 +33,7 @@ export function ImageCard({
             alt={`${title} by Hans van den Eijnde`}
             fill
             priority={priority}
+            profile="gallery"
             sizes={sizes}
             className="gallery-image object-cover"
           />

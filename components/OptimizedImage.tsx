@@ -1,12 +1,12 @@
-import Image, { type ImageProps } from "next/image";
-import { IMAGE_QUALITY } from "@/lib/image-config";
+import type { ImageVariantProfile } from "@/lib/image-config";
+import { getResponsiveImage } from "@/lib/responsive-image";
 
 type OptimizedImageProps = {
   src: string;
   alt: string;
   sizes: string;
   priority?: boolean;
-  quality?: number;
+  profile?: ImageVariantProfile;
   className?: string;
 } & (
   | { fill: true; width?: never; height?: never }
@@ -18,40 +18,40 @@ export function OptimizedImage({
   alt,
   sizes,
   priority = false,
-  quality = IMAGE_QUALITY,
+  profile,
   className = "",
   fill,
   width,
   height,
 }: OptimizedImageProps) {
-  const shared: Pick<ImageProps, "src" | "alt" | "sizes" | "quality" | "className"> = {
-    src,
+  const resolvedProfile = profile ?? "gallery";
+  const { src: resolvedSrc, srcSet } = getResponsiveImage(src, resolvedProfile);
+
+  const shared = {
+    src: resolvedSrc,
+    srcSet,
+    sizes: srcSet ? sizes : undefined,
     alt,
-    sizes,
-    quality,
-    className,
+    loading: priority ? ("eager" as const) : ("lazy" as const),
+    decoding: priority ? ("sync" as const) : ("async" as const),
+    fetchPriority: priority ? ("high" as const) : undefined,
   };
 
   if (fill) {
     return (
-      <Image
+      <img
         {...shared}
-        fill
-        priority={priority}
-        loading={priority ? undefined : "lazy"}
-        decoding={priority ? "sync" : "async"}
+        className={`absolute inset-0 h-full w-full ${className}`}
       />
     );
   }
 
   return (
-    <Image
+    <img
       {...shared}
-      width={width!}
-      height={height!}
-      priority={priority}
-      loading={priority ? undefined : "lazy"}
-      decoding={priority ? "sync" : "async"}
+      width={width}
+      height={height}
+      className={className}
     />
   );
 }

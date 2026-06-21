@@ -35,6 +35,7 @@ export default function AboutPage() {
                     alt={artistPhoto.alt}
                     fill
                     priority
+                    profile="portrait"
                     className="object-cover object-center"
                     sizes={IMAGE_SIZES.portrait}
                   />

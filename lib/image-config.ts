@@ -1,5 +1,13 @@
-/** Shared next/image defaults for the portfolio. */
+/** Shared image defaults for the portfolio. */
 export const IMAGE_QUALITY = 80;
+
+export const IMAGE_VARIANT_WIDTHS = {
+  thumb: 400,
+  medium: 800,
+  large: 1600,
+} as const;
+
+export type ImageVariantProfile = "gallery" | "hero" | "portrait";
 
 export const IMAGE_SIZES = {
   hero: "100vw",

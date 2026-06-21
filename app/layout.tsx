@@ -55,7 +55,7 @@ export const metadata: Metadata = {
         url: "/opengraph-image.png",
         width: 1200,
         height: 630,
-        alt: "Jerez de la Frontera — painting by Hans van den Eijnde",
+        alt: "Paintings and drawings by Hans van den Eijnde",
       },
     ],
   },

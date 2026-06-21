@@ -73,7 +73,6 @@ async function writeOpenGraphImage() {
       <rect width="1200" height="630" fill="url(#shade)"/>
       <text x="64" y="470" fill="#faf7f2" font-family="system-ui, sans-serif" font-size="22" letter-spacing="6">PAINTINGS &amp; DRAWINGS</text>
       <text x="64" y="540" fill="#faf7f2" font-family="Georgia, serif" font-size="64" font-weight="500">Hans van den Eijnde</text>
-      <text x="64" y="585" fill="rgba(250,247,242,0.8)" font-family="system-ui, sans-serif" font-size="24">Jerez de la Frontera</text>
     </svg>
   `;
 

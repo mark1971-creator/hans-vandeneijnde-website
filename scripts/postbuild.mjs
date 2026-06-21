@@ -33,6 +33,12 @@ for (const file of REQUIRED_METADATA) {
   }
 }
 
+const optimizedDir = path.join(outDir, "images-optimized");
+if (!fs.existsSync(optimizedDir)) {
+  console.error("postbuild: missing out/images-optimized/ — run npm run optimize-images.");
+  process.exit(1);
+}
+
 // serve.json is written by build-static.mjs; keep a fallback for manual builds.
 const serveDest = path.join(outDir, "serve.json");
 if (!fs.existsSync(serveDest)) {

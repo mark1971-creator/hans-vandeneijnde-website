@@ -35,6 +35,7 @@ export default function Home() {
             alt={`${hero.title} — painting by Hans van den Eijnde`}
             fill
             priority
+            profile="hero"
             className="object-cover object-[center_70%] sm:object-center"
             sizes={IMAGE_SIZES.hero}
           />
@@ -56,12 +57,6 @@ export default function Home() {
             <h1 className="font-display text-5xl font-medium leading-none tracking-wide text-ivory sm:text-6xl lg:text-7xl">
               Paintings &amp; Drawings
             </h1>
-            {hero && (
-              <p className="mt-4 text-sm uppercase tracking-[0.18em] text-ivory/70">
-                {hero.title}
-                {hero.size ? ` · ${hero.size}` : ""}
-              </p>
-            )}
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-ivory/85 sm:text-xl">
               Oil paintings, charcoal studies, and portraits — quiet observations
               of light, landscape, and the human form.
