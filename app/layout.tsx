@@ -37,6 +37,11 @@ export const metadata: Metadata = {
     "figurative art",
   ],
   authors: [{ name: "Hans van den Eijnde" }],
+  icons: {
+    icon: [{ url: "/icon.png", sizes: "32x32", type: "image/png" }],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/favicon.ico"],
+  },
   openGraph: {
     title: "Hans van den Eijnde | Painter",
     description:

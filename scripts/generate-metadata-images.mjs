@@ -1,6 +1,7 @@
 /**
- * Generates static metadata images for app/ (icon, apple-icon, OG, twitter).
- * Replaces dynamic ImageResponse routes that break static export on some hosts.
+ * Generates static metadata images in public/ (not app/).
+ * Keeping these out of app/ avoids Next.js metadata routes like /apple-icon
+ * that break static export on some Linux VPS builds.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -9,7 +10,7 @@ import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, "..");
-const APP_DIR = path.join(ROOT, "app");
+const PUBLIC_DIR = path.join(ROOT, "public");
 const HERO_IMAGE = path.join(
   ROOT,
   "public/images/paintings/jerez-de-la-frontera.png",
@@ -23,7 +24,7 @@ async function writeIcon() {
     </svg>
   `;
 
-  await sharp(Buffer.from(svg)).png().toFile(path.join(APP_DIR, "icon.png"));
+  await sharp(Buffer.from(svg)).png().toFile(path.join(PUBLIC_DIR, "icon.png"));
 }
 
 async function writeAppleIcon() {
@@ -42,7 +43,12 @@ async function writeAppleIcon() {
 
   await sharp(Buffer.from(svg))
     .png()
-    .toFile(path.join(APP_DIR, "apple-icon.png"));
+    .toFile(path.join(PUBLIC_DIR, "apple-icon.png"));
+}
+
+async function writeFavicon() {
+  const iconPath = path.join(PUBLIC_DIR, "icon.png");
+  await sharp(iconPath).resize(32, 32).toFile(path.join(PUBLIC_DIR, "favicon.ico"));
 }
 
 async function writeOpenGraphImage() {
@@ -76,18 +82,21 @@ async function writeOpenGraphImage() {
   await sharp(photo)
     .composite([{ input: overlayBuffer, top: 0, left: 0 }])
     .png()
-    .toFile(path.join(APP_DIR, "opengraph-image.png"));
+    .toFile(path.join(PUBLIC_DIR, "opengraph-image.png"));
 }
 
 async function main() {
   await writeIcon();
   await writeAppleIcon();
+  await writeFavicon();
   await writeOpenGraphImage();
   fs.copyFileSync(
-    path.join(APP_DIR, "opengraph-image.png"),
-    path.join(APP_DIR, "twitter-image.png"),
+    path.join(PUBLIC_DIR, "opengraph-image.png"),
+    path.join(PUBLIC_DIR, "twitter-image.png"),
   );
-  console.log("Generated app/icon.png, apple-icon.png, opengraph-image.png, twitter-image.png");
+  console.log(
+    "Generated public/icon.png, apple-icon.png, favicon.ico, opengraph-image.png, twitter-image.png",
+  );
 }
 
 main().catch((error) => {
