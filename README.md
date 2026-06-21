@@ -29,7 +29,7 @@ This site is a **fully static export** — no Node.js or PM2 is needed in produc
 git clone https://github.com/mark1971-creator/hans-vandeneijnde-website.git
 cd hans-vandeneijnde-website
 npm ci
-npm run build          # outputs to out/
+npm run build          # must create out/index.html (build fails otherwise)
 
 # Point Nginx at out/ — see deploy/nginx-hans-portfolio.conf
 sudo cp deploy/nginx-hans-portfolio.conf /etc/nginx/sites-available/hans-portfolio

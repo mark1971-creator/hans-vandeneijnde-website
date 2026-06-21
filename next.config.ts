@@ -13,7 +13,11 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
-  // Avoid Next.js picking the parent directory when multiple lockfiles exist.
+  // Keep .next inside this project (never confuse with out/).
+  distDir: ".next",
+
+  // Pin the app root when multiple lockfiles exist on the server or dev machine.
+  outputFileTracingRoot: projectRoot,
   turbopack: {
     root: projectRoot,
   },
