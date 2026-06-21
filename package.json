@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "sync-artworks": "node scripts/sync-artworks.mjs",
-    "predev": "npm run sync-artworks",
-    "prebuild": "npm run sync-artworks",
+    "generate-metadata-images": "node scripts/generate-metadata-images.mjs",
+    "predev": "npm run sync-artworks && npm run generate-metadata-images",
+    "prebuild": "npm run sync-artworks && npm run generate-metadata-images",
     "dev": "next dev",
     "build": "node scripts/build-static.mjs",
     "postbuild": "node scripts/postbuild.mjs",

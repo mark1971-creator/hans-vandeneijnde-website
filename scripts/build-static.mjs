@@ -20,6 +20,8 @@ const REQUIRED_PATHS = [
   "404.html",
   "_next/static",
   "images",
+  "opengraph-image.png",
+  "icon.png",
 ];
 
 function log(message) {
@@ -88,9 +90,13 @@ if (!fs.existsSync(path.join(ROOT, "next.config.ts"))) {
 process.chdir(ROOT);
 log(`Project root: ${ROOT}`);
 
-const npx = process.platform === "win32" ? "npx.cmd" : "npx";
+const nextBin = path.join(ROOT, "node_modules", "next", "dist", "bin", "next");
 
-const build = spawnSync(npx, ["next", "build", "--webpack", "."], {
+if (!fs.existsSync(nextBin)) {
+  fail("Next.js is not installed. Run npm ci first.");
+}
+
+const build = spawnSync(process.execPath, [nextBin, "build", "--webpack", "."], {
   cwd: ROOT,
   stdio: "inherit",
   env: {
