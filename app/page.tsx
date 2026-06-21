@@ -35,7 +35,7 @@ export default function Home() {
             alt={`${hero.title} — painting by Hans van den Eijnde`}
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-[center_70%] sm:object-center"
             sizes={IMAGE_SIZES.hero}
           />
         )}

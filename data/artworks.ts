@@ -1110,6 +1110,16 @@ export const artworks: Artwork[] = [
     "available": false
   },
   {
+    "id": "paintings-featured-jerez-de-la-frontera",
+    "src": "/images/paintings/jerez-de-la-frontera.png",
+    "title": "Jerez de la Frontera",
+    "size": null,
+    "year": null,
+    "category": "paintings",
+    "subcategory": "featured",
+    "available": false
+  },
+  {
     "id": "paintings-featured-0cb288d3-4e29-4891-aa94-cd80d75b30d7",
     "src": "/images/paintings/paintings-featured-0cb288d3-4e29-4891-aa94-cd80d75b30d7.jpg",
     "title": "SLAC Exhibition, 2018",
@@ -2721,7 +2731,7 @@ export const artworks: Artwork[] = [
   }
 ];
 
-export const heroArtworkId = "paintings-recent-0b422981-58a5-4b40-8c86-169da6630f0e";
+export const heroArtworkId = "paintings-featured-jerez-de-la-frontera";
 
 export function getArtworksByCategory(category: ArtworkCategory): Artwork[] {
   return artworks.filter((a) => a.category === category);

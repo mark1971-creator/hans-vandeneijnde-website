@@ -44,12 +44,21 @@ export const metadata: Metadata = {
     locale: "nl_BE",
     type: "website",
     siteName: "Hans van den Eijnde",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "Jerez de la Frontera — painting by Hans van den Eijnde",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Hans van den Eijnde | Painter",
     description:
       "Oil paintings, drawings, and portraits by Hans van den Eijnde.",
+    images: ["/twitter-image"],
   },
 };
 

@@ -1,10 +1,18 @@
+import { readFile } from "node:fs/promises";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
 
-export const alt = "Hans van den Eijnde — Paintings & Drawings";
+export const alt =
+  "Jerez de la Frontera — painting by Hans van den Eijnde";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpenGraphImage() {
+export default async function OpenGraphImage() {
+  const painting = await readFile(
+    join(process.cwd(), "public/images/paintings/jerez-de-la-frontera.png"),
+  );
+  const paintingSrc = `data:image/png;base64,${painting.toString("base64")}`;
+
   return new ImageResponse(
     (
       <div
@@ -12,78 +20,75 @@ export default function OpenGraphImage() {
           width: "100%",
           height: "100%",
           display: "flex",
-          flexDirection: "column",
-          justifyContent: "flex-end",
-          padding: "72px 80px",
-          background: "linear-gradient(135deg, #1a1612 0%, #3d3428 38%, #9c6644 72%, #c4a574 100%)",
-          color: "#faf7f2",
-          fontFamily: "Georgia, serif",
+          position: "relative",
+          background: "#1a1612",
         }}
       >
+        <img
+          src={paintingSrc}
+          alt=""
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center 65%",
+          }}
+        />
         <div
           style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(to top, rgba(26, 22, 18, 0.92) 0%, rgba(26, 22, 18, 0.35) 45%, rgba(26, 22, 18, 0.15) 100%)",
+          }}
+        />
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
             display: "flex",
-            alignItems: "center",
-            gap: 28,
-            marginBottom: 36,
+            flexDirection: "column",
+            padding: "56px 64px",
+            color: "#faf7f2",
+            fontFamily: "Georgia, serif",
           }}
         >
-          <div
+          <p
             style={{
-              width: 88,
-              height: 88,
-              borderRadius: "50%",
-              border: "2px solid rgba(250, 247, 242, 0.35)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: 52,
-              fontWeight: 500,
+              fontSize: 22,
+              letterSpacing: "0.28em",
+              textTransform: "uppercase",
+              margin: 0,
+              opacity: 0.85,
+              fontFamily: "system-ui, sans-serif",
             }}
           >
-            H
-          </div>
-          <div
+            Paintings &amp; Drawings
+          </p>
+          <h1
             style={{
-              width: 120,
-              height: 1,
-              background: "rgba(250, 247, 242, 0.4)",
+              fontSize: 64,
+              fontWeight: 500,
+              lineHeight: 1.05,
+              margin: "12px 0 0",
+              letterSpacing: "0.02em",
             }}
-          />
+          >
+            Hans van den Eijnde
+          </h1>
+          <p
+            style={{
+              fontSize: 24,
+              marginTop: 14,
+              opacity: 0.8,
+              fontFamily: "system-ui, sans-serif",
+            }}
+          >
+            Jerez de la Frontera
+          </p>
         </div>
-        <p
-          style={{
-            fontSize: 28,
-            letterSpacing: "0.28em",
-            textTransform: "uppercase",
-            opacity: 0.85,
-            margin: 0,
-            fontFamily: "system-ui, sans-serif",
-          }}
-        >
-          Paintings &amp; Drawings
-        </p>
-        <h1
-          style={{
-            fontSize: 72,
-            fontWeight: 500,
-            lineHeight: 1.05,
-            margin: "16px 0 0",
-            letterSpacing: "0.02em",
-          }}
-        >
-          Hans van den Eijnde
-        </h1>
-        <p
-          style={{
-            fontSize: 26,
-            marginTop: 20,
-            opacity: 0.8,
-            fontFamily: "system-ui, sans-serif",
-          }}
-        >
-          Oil paintings, drawings &amp; portraits
-        </p>
       </div>
     ),
     { ...size },
