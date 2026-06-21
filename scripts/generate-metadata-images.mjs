@@ -48,7 +48,7 @@ async function writeAppleIcon() {
 
 async function writeFavicon() {
   const iconPath = path.join(PUBLIC_DIR, "icon.png");
-  await sharp(iconPath).resize(32, 32).toFile(path.join(PUBLIC_DIR, "favicon.ico"));
+  fs.copyFileSync(iconPath, path.join(PUBLIC_DIR, "favicon.ico"));
 }
 
 async function writeOpenGraphImage() {

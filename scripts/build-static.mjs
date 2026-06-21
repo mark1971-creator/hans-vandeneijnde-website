@@ -20,8 +20,11 @@ const REQUIRED_PATHS = [
   "404.html",
   "_next/static",
   "images",
-  "opengraph-image.png",
   "icon.png",
+  "apple-icon.png",
+  "favicon.ico",
+  "opengraph-image.png",
+  "twitter-image.png",
 ];
 
 function log(message) {

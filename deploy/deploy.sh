@@ -17,6 +17,13 @@ export NODE_ENV=production
 npm ci
 npm run build
 
+for f in icon.png apple-icon.png favicon.ico opengraph-image.png twitter-image.png; do
+  if [ ! -f "$REPO_DIR/out/$f" ]; then
+    echo "ERROR: out/$f missing after build" >&2
+    exit 1
+  fi
+done
+
 echo "==> Publishing static export to $APP_DIR/out"
 mkdir -p "$APP_DIR"
 rsync -a --delete "$REPO_DIR/out/" "$APP_DIR/out/"

@@ -20,7 +20,8 @@ const sourceSans = Source_Sans_3({
 });
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://hans-vandeneijnde.be";
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://hans.beingatfullpotential.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
